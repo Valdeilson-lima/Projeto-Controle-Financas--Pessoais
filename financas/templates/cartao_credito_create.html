@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block title %}Criar Novo Cartão de Crédito{% endblock %}
+
+{% block content %}
+<div class="container mt-2">
+    <div class="jumbotron text-center bg-light p-3 mb-5 shadow-sm rounded">
+        <h1 class="display-6 text-primary">Crie um Novo Cartão de Crédito</h1>
+        <hr class="my-4">
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <!-- Formulário de criação do cartão -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Informações do Cartão</h5>
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <!-- Exibe os erros de validação, se houver -->
+                        {% if form.errors %}
+                            <div class="alert alert-danger">
+                                <ul>
+                                    {% for field in form %}
+                                        {% for error in field.errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        {% endif %}
+
+                        <!-- Renderiza os campos do formulário -->
+                        <div class="form-group">
+                            <label for="{{ form.nome.id_for_label }}">Nome do Cartão</label>
+                            {{ form.nome }}
+                        </div>
+
+                        <div class="form-group">
+                            <label for="{{ form.limite.id_for_label }}">Limite do Cartão</label>
+                            {{ form.limite }}
+                        </div>
+
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">Salvar</button>
+                            <a href="{% url 'cartao_credito' %}" class="btn btn-secondary">Cancelar</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

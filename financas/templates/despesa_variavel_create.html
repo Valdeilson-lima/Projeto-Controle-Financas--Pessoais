@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}Adicionar Despesa Variável{% endblock %}
+
+{% block content %}
+<div class="container mt-2">
+    <div class="jumbotron text-center bg-light p-3 mb-5 shadow-sm rounded">
+        <h1 class="display-6 text-primary">Adicione Aqui Suas Despesas Variáveis</h1>
+        <hr class="my-4">
+    </div>
+    
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <!-- Exemplo de formulário estilizado com Bootstrap -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Adicionar Despesa Variável</h5>
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="id_data">Data</label>
+                            <input type="date" class="form-control" id="id_data" name="data" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="id_descricao">Descrição</label>
+                            <input type="text" class="form-control" id="id_descricao" name="descricao" placeholder="Descrição da despesa" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="id_valor">Valor</label>
+                            <input type="number" class="form-control" id="id_valor" name="valor" step="0.01" placeholder="0.00" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="id_cartao_credito">Cartão de Crédito</label>
+                            <select class="form-control" id="id_cartao_credito" name="cartao_credito" required>
+                                <option value="" disabled selected>Escolha o cartão</option>
+                                {% for cartao in cartoes_credito %}
+                                    <option value="{{ cartao.id }}">{{ cartao.nome }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Salvar</button>
+                        <a href="{% url 'despesas_variaveis' %}" class="btn btn-secondary">Cancelar</a>
+                        <!-- Certifique-se que 'despesas_variaveis' é o nome correto para a listagem -->
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

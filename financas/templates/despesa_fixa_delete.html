@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}Confirmar Exclusão{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="jumbotron text-center bg-light p-4 mb-4 shadow rounded">
+        <h1 class="display-5 text-danger">Excluir Despesa Fixa</h1>
+        <hr class="my-4">
+        <p class="lead">Você tem certeza de que deseja excluir esta despesa fixa?</p>
+        <p><strong>{{ object.descricao }}</strong></p>
+    </div>
+    
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="d-flex justify-content-between">
+                            <button type="submit" class="btn btn-danger">Confirmar Exclusão</button>
+                            <a href="{% url 'despesas_fixas' %}" class="btn btn-secondary">Cancelar</a>
+                            <!-- Certifique-se que 'despesas_fixas' corresponde ao nome correto -->
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

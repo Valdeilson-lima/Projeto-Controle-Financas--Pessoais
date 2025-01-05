@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block title %}Lista de Receitas{% endblock %}
+
+{% block content %}
+
+<div class="container mt-2">
+    <h1 class="mb-4">Receitas</h1>
+    <div class="filtro">
+        <form method="get" action="{% url 'gerar_relatorio_receitas' %}">
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <label>Data Inicial:</label>
+                    <input type="date" name="data_inicio" class="form-control">
+                </div>
+                <div class="col-md-3">
+                    <label>Data Final:</label>
+                    <input type="date" name="data_fim" class="form-control">
+                </div>
+                <div class="col-md-4 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary">Filtrar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <table class="table table-striped table-hover">
+        <thead class="thead-dark">
+            <tr>
+                <th>Data</th>
+                <th>Descrição</th>
+                <th>Valor</th>
+                <th class="text-center">Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for receita in receitas %}
+                <tr>
+                    <td>{{ receita.data }}</td>
+                    <td>{{ receita.descricao }}</td>
+                    <td>R$ {{ receita.valor|floatformat:2 }}</td>
+                    <td class="text-center">
+                        <a href="{% url 'receita_editar' receita.pk %}" class="btn btn-outline-secondary btn-sm mr-1">
+                            <i class="fas fa-edit"></i> Editar
+                        </a>
+                        <a href="{% url 'receita_deletar' receita.pk %}" class="btn btn-outline-danger btn-sm ml-1">
+                            <i class="fas fa-trash-alt"></i> Deletar
+                        </a>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="4" class="text-center">Nenhuma receita cadastrada.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Exibir o somatório das receitas -->
+    <div class="alert alert-info mt-1" role="alert">
+        <strong>Somatório Total de Receitas:</strong> R$ {{ total_receitas|floatformat:2 }}
+    </div>
+
+    <div class="d-flex justify-content-between">
+        <a href="{% url 'receita_criar' %}" class="btn btn-primary">
+          <i class="fas fa-plus"></i> Cadastrar Nova Receita
+        </a>
+        <a href="{% url 'gerar_relatorio_receitas' %}" class="btn btn-primary ms-auto">
+          Gerar Relatório de Receitas
+        </a>
+      </div>
+</div>
+{% endblock %}

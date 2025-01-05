@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %} Finanças Pessoais {% endblock %}</title>
+    
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #f0f2f5;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #004c90;
+            color: #fff;
+            padding: 15px 0;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        nav {
+            background-color: #004c90;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+        nav ul li {
+            margin: 0 15px;
+        }
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        nav ul li a:hover {
+            background-color: #0077cc;
+        }
+        nav ul li.active a {
+            background-color: #ffcc00;
+            color: #004c90;
+        }
+        main {
+            padding: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        
+        <nav>
+            <ul>
+                {% if user.is_authenticated %}
+                <li>Olá, {{ user.username }}, seja bem-vindo!</li>
+                <li><a href="{% url 'home-page' %}">Home</a></li>
+                <li><a href="{% url 'receitas' %}">Receitas</a></li>
+                <li><a href="{% url 'despesas_fixas' %}">Despesas Fixas</a></li>
+                <li><a href="{% url 'despesas_variaveis' %}">Despesas Variáveis</a></li>
+                <li><a href="{% url 'cartao_credito' %}">Cartão de Crédito</a></li>
+                {% endif %}
+
+                {% if not user.is_authenticated %}
+                <h2>Seja bem Vindo Ao Seu Sistema de controle Financeiro Pessoal!!</h2>
+                <li><a href="{% url 'login' %}"></a></li>
+                {% endif %}
+            
+                {% if user.is_authenticated %}
+                <!-- Ajuste no botão de logout -->
+                <li><a href="{% url 'logout' %}">Sair</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </header>
+    <main>
+        {% block content %} {% endblock %}
+    </main>
+    <footer>
+
+    </footer>
+</body>
+</html>

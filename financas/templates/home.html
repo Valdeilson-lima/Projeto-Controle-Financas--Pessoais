@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+
+<div class="container mt-1">
+    <div class="jumbotron text-center bg-light p-5 mb-5 shadow-sm rounded">
+        <h1 class="display-4 text-primary">Bem-vindo ao Painel Financeiro</h1>
+        <p class="lead">Acompanhe de forma simples e eficiente o seu fluxo financeiro.</p>
+        <hr class="my-4">
+        <div class="alert {% if diferenca < 0 %}alert-danger{% else %}alert-success{% endif %}" role="alert">
+            {% if diferenca < 0 %}
+                <strong>Atenção!</strong> Você ultrapassou suas receitas em: 
+                <span class="text-danger">R$ {{ diferenca_abs|floatformat:2|intcomma }}</span>
+            {% else %}
+                Você tem uma margem de segurança de: 
+                <span class="text-success">R$ {{ diferenca|floatformat:2|intcomma }}</span> antes de ultrapassar o limite das receitas.
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="row">
+        <!-- Total de Receitas -->
+        <div class="col-md-3">
+            <div class="card text-center shadow-sm mb-4">
+                <div class="card-body">
+                    <h5 class="card-title text-success">Total de Receitas</h5>
+                    <p class="card-text display-5 text-success font-weight-bold">
+                        R$ {{ total_receitas|floatformat:2|intcomma }}
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total de Despesas Fixas -->
+        <div class="col-md-3">
+            <div class="card text-center shadow-sm mb-4">
+                <div class="card-body">
+                    <h5 class="card-title text-danger">Despesas Fixas</h5>
+                    <p class="card-text display-5 text-danger font-weight-bold">
+                        R$ {{ total_despesas_fixas|floatformat:2|intcomma }}
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total de Despesas Variáveis -->
+        <div class="col-md-3">
+            <div class="card text-center shadow-sm mb-4">
+                <div class="card-body">
+                    <h5 class="card-title text-warning">Despesas Variáveis</h5>
+                    <p class="card-text display-5 text-warning font-weight-bold">
+                        R$ {{ total_despesas_variaveis|floatformat:2|intcomma }}
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total de Despesas Gerais -->
+        <div class="col-md-3">
+            <div class="card text-center shadow-sm mb-4">
+                <div class="card-body">
+                    <h5 class="card-title text-primary">Despesas Gerais</h5>
+                    <p class="card-text display-5 text-primary font-weight-bold">
+                        R$ {{ total_despesas_gerais|floatformat:2|intcomma }}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

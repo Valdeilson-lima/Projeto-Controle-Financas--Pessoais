@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}Editar Receita{% endblock %}
+
+{% block content %}
+<div class="container mt-2">
+    <div class="jumbotron text-center bg-light p-4 mb-5 shadow rounded">
+        <h1 class="display-5 text-primary">Editar Receita</h1>
+        <hr class="my-4">
+    </div>
+    
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8 col-sm-10">
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <h5 class="card-title mb-4">Atualizar Detalhes da Receita</h5>
+                    
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ form.non_field_errors }}
+                        
+                        <div class="mb-3">
+                            {{ form.data.label_tag }}
+                            {{ form.data }}
+                            <div class="text-danger">{{ form.data.errors }}</div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            {{ form.descricao.label_tag }}
+                            {{ form.descricao }}
+                            <div class="text-danger">{{ form.descricao.errors }}</div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            {{ form.valor.label_tag }}
+                            {{ form.valor }}
+                            <div class="text-danger">{{ form.valor.errors }}</div>
+                        </div>
+                        
+                        <div class="d-flex justify-content-end">
+                            <button type="submit" class="btn btn-primary me-2">Salvar Alterações</button>
+                            <a href="{% url 'receitas' %}" class="btn btn-secondary">Cancelar</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
