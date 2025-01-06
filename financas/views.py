@@ -1,11 +1,12 @@
 from  datetime import datetime
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from pyexpat.errors import messages
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, RedirectView
 from django.urls import reverse_lazy
 from .models import CartaoCredito, Receita, DespesaFixa, DespesaVariavel, TotalReceitas, TotalDespesasFixas, TotalDespesasVariaveis
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.views import View
 from django.db.models import Sum
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from reportlab.pdfgen import canvas # type: ignore
 from io import BytesIO, StringIO
 from django.utils import timezone
@@ -47,13 +48,66 @@ class DespesaFixaList(ListView):
     model = DespesaFixa
     template_name = 'despesa_fixa_list.html'
     context_object_name = 'despesas_fixas'
+    paginate_by = 10
 
+    # Filtro dos dados da view
+    def get_queryset(self):
+        queryset = DespesaFixa.objects.all()  # Exibe todas as despesas fixas
+
+        # Aplica os filtros a partir dos parâmetros GET na URL
+        data_inicio = self.request.GET.get('data_inicio')
+        data_fim = self.request.GET.get('data_fim')
+        descricao = self.request.GET.get('descricao')
+        status = self.request.GET.get('status')  # Novo filtro de status
+
+        if data_inicio:
+            queryset = queryset.filter(data__gte=data_inicio)
+        if data_fim:
+            queryset = queryset.filter(data__lte=data_fim)
+        if descricao:
+            queryset = queryset.filter(descricao__icontains=descricao)
+
+        if status:
+            # Filtro por status de pagamento (paga ou não paga)
+            if status == 'paga':
+                queryset = queryset.filter(paga=True)
+            elif status == 'nao_paga':
+                queryset = queryset.filter(paga=False)
+
+        return queryset
+
+    # Adiciona o total das despesas não pagas e o total de receitas ao contexto
     def get_context_data(self, **kwargs):
-           context = super().get_context_data(**kwargs)
-           # Calcula o total de todas as receitas
-           context['total_despesas_fixas'] = DespesaFixa.objects.aggregate(total=Sum('valor'))['total'] or 0
-           return context
+        context = super().get_context_data(**kwargs)
 
+        status_filtro = self.request.GET.get('status', '')
+
+        # Calcula o total das despesas não pagas
+        total_despesas_fixas = self.get_queryset().aggregate(Sum('valor'))['valor__sum'] or 0.0
+        if status_filtro == 'paga':
+            total_despesas_fixas_pagas = self.get_queryset().filter(paga=True).aggregate(Sum('valor'))['valor__sum'] or 0.0
+            context['nome_total'] = 'Total de Despesas Pagas'
+            context['total_despesas_fixas'] = total_despesas_fixas_pagas
+        elif status_filtro == 'nao_paga':
+            total_despesas_fixas_nao_pagas = self.get_queryset().filter(paga=False).aggregate(Sum('valor'))['valor__sum'] or 0.0
+            context['nome_total'] = 'Total de Despesas Não Pagas'
+            context['total_despesas_fixas'] = total_despesas_fixas_nao_pagas
+        else:
+            context['nome_total'] = 'Total de Despesas Fixas'
+            context['total_despesas_fixas'] = total_despesas_fixas
+        
+
+        # Calcula o total das receitas (supondo que exista um modelo Receita com campo 'valor')
+        total_receitas = Receita.objects.aggregate(Sum('valor'))['valor__sum'] or 0
+
+        # Adiciona os totais ao contexto
+        #context['total_despesas_fixas'] = total_despesas_fixas
+        #context['total_despesas_fixas_pagas'] = total_despesas_fixas_pagas
+        context['total_receitas'] = total_receitas
+        #context['status'] = self.request.GET.get('status', '') 
+
+        return context
+    
 
 class DespesaFixaCreate(CreateView):
     model = DespesaFixa
@@ -212,16 +266,28 @@ class GerarRelatorioDespesasFixas(View):
         else:
             despesas = DespesaFixa.objects.all()
 
-        total_despesas = despesas.aggregate(total=Sum('valor'))['total'] or 0
+        # Calcular o total das despesas
+        #total_despesas = despesas.aggregate(total=Sum('valor'))['total'] or 0
+
+        # Calcular o total das despesas não pagas
+        total_despesas_fixas= despesas.filter(paga=False).aggregate(total=Sum('valor'))['total'] or 0
+
+        # Calcular o total das despesas pagas
+        total_despesas_pagas = despesas.filter(paga=True).aggregate(total=Sum('valor'))['total'] or 0
+
+        # Calcular o total de receitas
+        total_receitas = Receita.objects.aggregate(total=Sum('valor'))['total'] or 0
 
         return render(request, 'relatorio_despesas_fixas.html', {
             'despesas': despesas,
-            'total_despesas': total_despesas,
+            #'total_despesas': total_despesas,
+            'total_despesas_fixas': total_despesas_fixas,
+            'total_despesas_pagas': total_despesas_pagas,
+            'total_receitas': total_receitas,
             'data_inicio': data_inicio,
             'data_fim': data_fim,
             'imprimir': False  # Para não mostrar o relatório automaticamente
         })
-
 
 class GerarRelatorioDespesasVariaveis(View):
     def get(self, request, *args, **kwargs):
@@ -276,3 +342,22 @@ class HomeView(View):
         }
 
         return render(request, self.template_name, context)
+    
+class MarcarComoPagoView(RedirectView):
+    url = reverse_lazy('despesas_fixas')  # Redireciona para a lista de despesas
+
+    def get_redirect_url(self, *args, **kwargs):
+        # Obtém a despesa com o ID fornecido na URL
+        despesa_fixa = DespesaFixa.objects.get(pk=kwargs['pk'])
+        
+        # Marca a despesa como paga
+        despesa_fixa.paga = True
+        despesa_fixa.save()
+
+        # Atualiza o total das despesas não pagas
+        total_despesas_fixas = DespesaFixa.objects.filter(paga=False).aggregate(Sum('valor'))['valor__sum'] or 0
+        
+        
+
+        # Redireciona de volta para a lista de despesas com o total atualizado
+        return super().get_redirect_url(*args, **kwargs)

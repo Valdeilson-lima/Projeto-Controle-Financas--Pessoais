@@ -32,6 +32,7 @@ class DespesaFixa(models.Model):
     descricao = models.CharField('Descrição', max_length=255)
     cartao_credito = models.ForeignKey(CartaoCredito, on_delete=models.CASCADE, null=True, blank=True)
     pago_com_cartao = models.BooleanField('Pago com cartão?', default=False)
+    paga = models.BooleanField(default=False)
 
     def __str__(self):
         return self.descricao
@@ -42,6 +43,7 @@ class DespesaVariavel(models.Model):
     descricao = models.CharField('Descrição', max_length=255)
     cartao_credito = models.ForeignKey(CartaoCredito, on_delete=models.CASCADE, null=True, blank=True)
     pago_com_cartao = models.BooleanField('Pago com cartão?', default=False)
+    paga = models.BooleanField(default=False)
 
     def __str__(self):
         return self.descricao

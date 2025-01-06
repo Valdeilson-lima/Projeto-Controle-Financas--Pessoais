@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from .views import GerarRelatorioReceitas, GerarRelatorioDespesasFixas, GerarRelatorioDespesasVariaveis
+from .views import GerarRelatorioReceitas, GerarRelatorioDespesasFixas, GerarRelatorioDespesasVariaveis, MarcarComoPagoView
 
 urlpatterns = [
  
@@ -16,6 +16,7 @@ urlpatterns = [
     path('despesas-fixas/criar/', views.DespesaFixaCreate.as_view(), name='despesa_fixa_criar'),
     path('despesas-fixas/<int:pk>/editar/', views.DespesaFixaUpdate.as_view(), name='despesa_fixa_editar'),
     path('despesas-fixas/<int:pk>/deletar/', views.DespesaFixaDelete.as_view(), name='despesa_fixa_deletar'),
+    path('despesa-fixa/<int:pk>/marcar-paga/', MarcarComoPagoView.as_view(), name='marcar_despesa_como_paga'),
 
     # Despesas Variáveis
     path('despesas-variaveis/', views.DespesaVariavelList.as_view(), name='despesas_variaveis'),
@@ -38,4 +39,6 @@ urlpatterns = [
     path('gerar-relatorio/receitas/', GerarRelatorioReceitas.as_view(), name='gerar_relatorio_receitas'),
     path('gerar-relatorio/despesas_fixas/', GerarRelatorioDespesasFixas.as_view(), name='gerar_relatorio_despesas_fixas'),
     path('gerar-relatorio/despesas_variaveis/', GerarRelatorioDespesasVariaveis.as_view(), name='gerar_relatorio_despesas_variaveis'),
+
+    
 ]

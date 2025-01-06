@@ -1,19 +1,45 @@
 {% extends 'base.html' %}
 
-{% block title %}Relatório de Despesas Variável{% endblock %}
+{% block title %}Relatório de Despesas Variáveis{% endblock %}
 
 {% block content %}
 <div class="container mt-4">
-    <h1 class="text-center mb-4">Relatório de Despesas Variável</h1>
+    <h1 class="text-center mb-4">Relatório de Despesas Variáveis</h1>
 
-       <!-- Tabela de Relatório -->
+    <!-- Filtro por data e descrição -->
+    <form method="GET" action="{% url 'gerar_relatorio_despesas_variaveis' %}">
+        <div class="row mb-3">
+            <!-- Filtro de Data Inicial -->
+            <div class="col-md-3">
+                <label for="data_inicio">Data Inicial:</label>
+                <input type="date" id="data_inicio" name="data_inicio" class="form-control" value="{{ data_inicio }}">
+            </div>
+            <!-- Filtro de Data Final -->
+            <div class="col-md-3">
+                <label for="data_fim">Data Final:</label>
+                <input type="date" id="data_fim" name="data_fim" class="form-control" value="{{ data_fim }}">
+            </div>
+            <!-- Filtro de Descrição -->
+            <div class="col-md-4">
+                <label for="descricao">Descrição:</label>
+                <input type="text" id="descricao" name="descricao" class="form-control" placeholder="Filtrar por descrição" value="{{ descricao }}">
+            </div>
+            <!-- Botão de Filtro -->
+            <div class="col-md-2 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary w-100">Filtrar</button>
+            </div>
+        </div>
+    </form>
+    
+    
+    <!-- Tabela de Relatório -->
     <div class="table-responsive">
         <table class="table table-striped table-hover">
             <thead class="table-dark">
                 <tr>
                     <th scope="col">Data</th>
                     <th scope="col">Descrição</th>
-                    <th scope="col">Valor(R$)</th>
+                    <th scope="col">Valor (R$)</th>
                 </tr>
             </thead>
             <tbody>
@@ -35,7 +61,7 @@
     <!-- Total e Opção de Impressão -->
     <div class="d-flex justify-content-between align-items-center mt-2">
         <div class="alert alert-info mb-0">
-            <strong>Total de Depesas:</strong> R$ {{ total_despesas|floatformat:2 }}
+            <strong>Total de Despesas:</strong> R$ {{ total_despesas|floatformat:2 }}
         </div>
         <div class="d-flex">
             <a href="{% url 'despesas_variaveis' %}" class="btn btn-primary me-2">
