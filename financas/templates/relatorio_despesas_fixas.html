@@ -13,7 +13,7 @@
                 <tr>
                     <th scope="col">Data</th>
                     <th scope="col">Descrição</th>
-                    <th scope="col">Valor (R$)</th>
+                    <th scope="col">Valor (RS)</th>
                     <th scope="col">Status</th>
                 </tr>
             </thead>
@@ -42,24 +42,27 @@
 
     <!-- Total de Despesas Não Pagas -->
     <div class="alert alert-info mt-3">
-        <strong>Total de Despesas Não Pagas:</strong> R$ {{ total_despesas_fixas|floatformat:2 }}
+        <strong>Total de Despesas Fixas Não Pagas:</strong> R$ {{ total_despesas_fixas|floatformat:2 }}
     </div>
 
     <!-- Total de Receitas -->
     <div class="alert alert-success mb-3">
         <strong>Total de Receitas:</strong> R$ {{ total_receitas|floatformat:2 }}
     </div>
+
+    <!-- Total de Despesas Fixas Pagas -->
     <div class="alert alert-success mb-3">
-        <strong>Total de depsesas Fixas Pagas:</strong> R$ {{ total_despesas_pagas|floatformat:2 }}
+        <strong>Total de Despesas Fixas Pagas:</strong> R$ {{ total_despesas_pagas|floatformat:2 }}
     </div>
-    <!-- Opção de Impressão -->
-    <div class="d-flex justify-content-between align-items-center mt-2">
-        <div class="d-flex">
-            <a href="{% url 'despesas_fixas' %}" class="btn btn-primary btn-sm me-2" style="margin-right: 10px;">
-                Cancelar Impressão
-            </a>
-            <button class="btn btn-success mx-2" onclick="window.print()">Imprimir Relatório</button>
-        </div>
+
+    <!-- Botões Alinhados à Direita -->
+    <div class="d-flex justify-content-end">
+        <a href="{% url 'despesas_fixas' %}" class="btn btn-primary btn-sm me-2" style="margin-right: 10px;">
+            <i class="fas fa-arrow-left"></i> Voltar
+        </a>
+        <button class="btn btn-secondary btn-sm" onclick="window.print()">
+            <i class="fas fa-print"></i> Imprimir
+        </button>
     </div>
 </div>
 {% endblock %}

@@ -12,7 +12,7 @@ from .models import (
 )
 
 class CartaoCreditoAdmin(admin.ModelAdmin):
-    list_display = ('nome', 'limite')
+    list_display = ('nome', 'limite', 'valor_total')
     search_fields = ('nome',)
     ordering = ('nome',)
 
@@ -23,16 +23,16 @@ class ReceitaAdmin(admin.ModelAdmin):
     list_filter = ('data',)
 
 class DespesaFixaAdmin(admin.ModelAdmin):
-    list_display = ('data', 'valor', 'descricao', 'cartao_credito', 'pago_com_cartao')
+    list_display = ('data','valor', 'descricao', 'cartao_credito', 'pago_com_cartao')
     search_fields = ('descricao',)
     ordering = ('-data',)
     list_filter = ('data', 'cartao_credito')
 
 class DespesaVariavelAdmin(admin.ModelAdmin):
-    list_display = ('data', 'valor', 'descricao', 'cartao_credito', 'pago_com_cartao')
+    list_display = ('data','valor', 'descricao', 'cartao_credito', 'pago_com_cartao')
     search_fields = ('descricao',)
     ordering = ('-data',)
-    list_filter = ('data', 'cartao_credito')
+    list_filter = ('data','cartao_credito')
 
 class TotalReceitasAdmin(admin.ModelAdmin):
     list_display = ('total',)

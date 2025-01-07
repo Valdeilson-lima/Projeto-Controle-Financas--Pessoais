@@ -1,37 +1,11 @@
 {% extends 'base.html' %}
 
-{% block title %}Relatório de Despesas Variáveis{% endblock %}
+{% block title %}Relatório de Despesas variaveis{% endblock %}
 
 {% block content %}
 <div class="container mt-4">
-    <h1 class="text-center mb-4">Relatório de Despesas Variáveis</h1>
+    <h1 class="text-center mb-4">Relatório de Despesas Variaveis </h1>
 
-    <!-- Filtro por data e descrição -->
-    <form method="GET" action="{% url 'gerar_relatorio_despesas_variaveis' %}">
-        <div class="row mb-3">
-            <!-- Filtro de Data Inicial -->
-            <div class="col-md-3">
-                <label for="data_inicio">Data Inicial:</label>
-                <input type="date" id="data_inicio" name="data_inicio" class="form-control" value="{{ data_inicio }}">
-            </div>
-            <!-- Filtro de Data Final -->
-            <div class="col-md-3">
-                <label for="data_fim">Data Final:</label>
-                <input type="date" id="data_fim" name="data_fim" class="form-control" value="{{ data_fim }}">
-            </div>
-            <!-- Filtro de Descrição -->
-            <div class="col-md-4">
-                <label for="descricao">Descrição:</label>
-                <input type="text" id="descricao" name="descricao" class="form-control" placeholder="Filtrar por descrição" value="{{ descricao }}">
-            </div>
-            <!-- Botão de Filtro -->
-            <div class="col-md-2 d-flex align-items-end">
-                <button type="submit" class="btn btn-primary w-100">Filtrar</button>
-            </div>
-        </div>
-    </form>
-    
-    
     <!-- Tabela de Relatório -->
     <div class="table-responsive">
         <table class="table table-striped table-hover">
@@ -39,7 +13,8 @@
                 <tr>
                     <th scope="col">Data</th>
                     <th scope="col">Descrição</th>
-                    <th scope="col">Valor (R$)</th>
+                    <th scope="col">Valor (RS)</th>
+                    <th scope="col">Status</th>
                 </tr>
             </thead>
             <tbody>
@@ -48,27 +23,46 @@
                         <td>{{ despesa.data|date:"d/m/Y" }}</td>
                         <td>{{ despesa.descricao }}</td>
                         <td>{{ despesa.valor|floatformat:2 }}</td>
+                        <td>
+                            {% if despesa.paga %}
+                                <span class="badge bg-success">Pago</span>
+                            {% else %}
+                                <span class="badge bg-danger">Não Pago</span>
+                            {% endif %}
+                        </td>
                     </tr>
                 {% empty %}
                     <tr>
-                        <td colspan="3" class="text-center">Nenhuma despesa encontrada.</td>
+                        <td colspan="4" class="text-center">Nenhuma despesa encontrada.</td>
                     </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
 
-    <!-- Total e Opção de Impressão -->
-    <div class="d-flex justify-content-between align-items-center mt-2">
-        <div class="alert alert-info mb-0">
-            <strong>Total de Despesas:</strong> R$ {{ total_despesas|floatformat:2 }}
-        </div>
-        <div class="d-flex">
-            <a href="{% url 'despesas_variaveis' %}" class="btn btn-primary me-2">
-                Cancelar Impressão
-            </a>
-            <button class="btn btn-success mx-2" onclick="window.print()">Imprimir Relatório</button>
-        </div>
+    <!-- Total de Despesas Não Pagas -->
+    <div class="alert alert-info mt-3">
+        <strong>Total de Despesas Variaveis Não Pagas:</strong> R$ {{ total_despesas_variaveis|floatformat:2 }}
+    </div>
+
+    <!-- Total de Receitas -->
+    <div class="alert alert-success mb-3">
+        <strong>Total de Receitas:</strong> R$ {{ total_receitas|floatformat:2 }}
+    </div>
+
+    <!-- Total de Despesas Fixas Pagas -->
+    <div class="alert alert-success mb-3">
+        <strong>Total de Despesas Variaveis Pagas:</strong> R$ {{ total_despesas_pagas|floatformat:2 }}
+    </div>
+
+    <!-- Botões Alinhados à Direita -->
+    <div class="d-flex justify-content-end">
+        <a href="{% url 'despesas_variaveis' %}" class="btn btn-primary btn-sm me-2" style="margin-right: 10px;">
+            <i class="fas fa-arrow-left"></i> Voltar
+        </a>
+        <button class="btn btn-secondary btn-sm" onclick="window.print()">
+            <i class="fas fa-print"></i> Imprimir
+        </button>
     </div>
 </div>
 {% endblock %}

@@ -22,20 +22,20 @@
                 </div>
             </div>
         </form>
-    </div>
-    <table class="table table-striped table-hover">
-        <thead class="thead-dark">
+    </div class="table-responsive mb-4">
+    <table class="table table-bordered table-striped align-middle table-sm">
+        <thead class="table-dark">
             <tr>
-                <th>Data</th>
-                <th>Descrição</th>
-                <th>Valor</th>
+                <th class="text-center">Data Recebimento</th>
+                <th class="text-center">Descrição</th>
+                <th class="text-center">Valor</th>
                 <th class="text-center">Ações</th>
             </tr>
         </thead>
         <tbody>
             {% for receita in receitas %}
                 <tr>
-                    <td>{{ receita.data }}</td>
+                    <td>{{ receita.data|date:"d/m/Y" }}</td>
                     <td>{{ receita.descricao }}</td>
                     <td>R$ {{ receita.valor|floatformat:2 }}</td>
                     <td class="text-center">
@@ -60,13 +60,13 @@
         <strong>Somatório Total de Receitas:</strong> R$ {{ total_receitas|floatformat:2 }}
     </div>
 
-    <div class="d-flex justify-content-between">
-        <a href="{% url 'receita_criar' %}" class="btn btn-primary">
-          <i class="fas fa-plus"></i> Cadastrar Nova Receita
+    <div class="d-flex justify-content-end">
+        <a href="{% url 'receita_criar' %}" class="btn btn-primary btn-sm me-2" style="margin-right: 10px;">
+            <i class="fas fa-arrow-left"></i>Nova Receita
         </a>
-        <a href="{% url 'gerar_relatorio_receitas' %}" class="btn btn-primary ms-auto">
-          Gerar Relatório de Receitas
+        <a href="{% url 'gerar_relatorio_receitas' %}" class="btn btn-secondary btn-sm">
+            <i class="fas fa-print"></i>Relatório de Receitas
         </a>
-      </div>
+    </div>
 </div>
 {% endblock %}

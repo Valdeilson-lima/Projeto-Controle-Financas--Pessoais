@@ -24,7 +24,7 @@ class ReceitaModelForm(forms.ModelForm):
 class DespesaFixaModelForm(forms.ModelForm):
     class Meta:
         model = DespesaFixa
-        fields = ['data', 'descricao', 'valor', 'cartao_credito']
+        fields = ['data','descricao', 'valor', 'cartao_credito']
         
         widgets = {
             'data': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
@@ -43,7 +43,7 @@ class DespesaFixaModelForm(forms.ModelForm):
 class DespesaVariavelModelForm(forms.ModelForm):
     class Meta:
         model = DespesaVariavel
-        fields = ['data', 'descricao', 'valor', 'cartao_credito']
+        fields = ['data','descricao', 'valor', 'cartao_credito']
         
         widgets = {
             'data': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),

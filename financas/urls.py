@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from .views import GerarRelatorioReceitas, GerarRelatorioDespesasFixas, GerarRelatorioDespesasVariaveis, MarcarComoPagoView
+from .views import GerarRelatorioReceitas, GerarRelatorioDespesasFixas, GerarRelatorioDespesasVariaveis, MarcarComoDespesaFixaPagoView, MarcarComoDespesaVariavelPagoView
 
 urlpatterns = [
  
@@ -16,13 +16,14 @@ urlpatterns = [
     path('despesas-fixas/criar/', views.DespesaFixaCreate.as_view(), name='despesa_fixa_criar'),
     path('despesas-fixas/<int:pk>/editar/', views.DespesaFixaUpdate.as_view(), name='despesa_fixa_editar'),
     path('despesas-fixas/<int:pk>/deletar/', views.DespesaFixaDelete.as_view(), name='despesa_fixa_deletar'),
-    path('despesa-fixa/<int:pk>/marcar-paga/', MarcarComoPagoView.as_view(), name='marcar_despesa_como_paga'),
+    path('despesa-fixa/<int:pk>/marcar-paga/', MarcarComoDespesaFixaPagoView.as_view(), name='marcar_despesa_como_paga'),
 
     # Despesas Variáveis
     path('despesas-variaveis/', views.DespesaVariavelList.as_view(), name='despesas_variaveis'),
     path('despesas-variaveis/criar/', views.DespesaVariavelCreate.as_view(), name='despesa_variavel_criar'),
     path('despesas-variaveis/<int:pk>/editar/', views.DespesaVariavelUpdate.as_view(), name='despesa_variavel_editar'),
     path('despesas-variaveis/<int:pk>/deletar/', views.DespesaVariavelDelete.as_view(), name='despesa_variavel_deletar'),
+    path('despesas-variaveis/<int:pk>/marcar-paga/', MarcarComoDespesaVariavelPagoView.as_view(), name='marcar_despesa_como_paga_variavel'),
 
     # Cartão de Crédito
     path('cartao-credito/', views.CartaoCreditoList.as_view(), name='cartao_credito'),

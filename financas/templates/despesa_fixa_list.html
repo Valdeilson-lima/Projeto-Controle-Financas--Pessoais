@@ -4,17 +4,7 @@
 
 {% block content %}
 <div class="container mt-4">
-    <!-- Exibir mensagens de sucesso ou erro -->
-    {% if messages %}
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <strong>Sucesso!</strong> 
-            {% for message in messages %}
-                {{ message }}
-            {% endfor %}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    {% endif %}
-
+   
     <!-- Cabeçalho com título e botões -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="mb-0">Despesas Fixas</h1>
@@ -109,7 +99,7 @@
    <div class="d-flex justify-content-between align-items-center mt-4">
     <div>
         <h5>{{ nome_total }}:</h5>
-        <p class="fs-4 text-primary"><strong>R$ {{ total_despesas_fixas|floatformat:2 }}</strong></p>
+        <p class="alert alert-info mt-1" role="alert"><strong>R$ {{ total_despesas_fixas|floatformat:2 }}</strong></p>
     </div>
     <div class="d-flex">
         <a href="{% url 'despesa_fixa_criar' %}" class="btn btn-primary btn-sm me-2" style="margin-right: 10px;">
